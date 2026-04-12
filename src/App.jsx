@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
 
 export default function JorgePortfolioMockup() {
@@ -66,6 +67,7 @@ export default function JorgePortfolioMockup() {
       summary:
         "Supported the production through scene presentation, environment polish and visual review to help maintain a strong final look.",
       image: "/images/projects/superklaus.jpg",
+      link: "https://www.youtube.com/watch?v=zae8uv7nm8c",
     },
     {
       title: "Giants of La Mancha",
@@ -73,6 +75,7 @@ export default function JorgePortfolioMockup() {
       summary:
         "Helped shape clear, readable scenes while maintaining consistency and supporting the production’s visual storytelling.",
       image: "/images/projects/giants-of-la-mancha.jpg",
+      link: "https://www.youtube.com/watch?v=r6y8Ac9A7mU",
     },
     {
       title: "200% Wolf",
@@ -80,6 +83,7 @@ export default function JorgePortfolioMockup() {
       summary:
         "Provided support for animation-ready character workflows with a focus on technical reliability and clean production handoff.",
       image: "/images/projects/200-wolf.jpg",
+      link: "https://www.youtube.com/watch?v=s0gdFPg3cwI",
     },
     {
       title: "ARPO The Robot",
@@ -87,6 +91,7 @@ export default function JorgePortfolioMockup() {
       summary:
         "Reviewed deliverables to help ensure animation quality, clarity and visual consistency across the pipeline.",
       image: "/images/projects/arpo.jpg",
+      link: "https://www.youtube.com/watch?v=Nolk3lhXeNM",
     },
     {
       title: "Momonsters",
@@ -94,6 +99,7 @@ export default function JorgePortfolioMockup() {
       summary:
         "Contributed to polished animation output by supporting review workflows and maintaining reliable visual standards.",
       image: "/images/projects/momonsters.jpg",
+      link: "https://www.youtube.com/watch?v=Cin2FYG4UnI",
     },
     {
       title: "NORbert",
@@ -101,6 +107,7 @@ export default function JorgePortfolioMockup() {
       summary:
         "Supported stylized worldbuilding through scene composition and detail-focused set dressing work.",
       image: "/images/projects/norbert.jpg",
+      link: "https://www.youtube.com/watch?v=X1eFW6C6TT8",
     },
     {
       title: "Flamingo Flamenco",
@@ -108,6 +115,7 @@ export default function JorgePortfolioMockup() {
       summary:
         "Helped build appealing scenes and visually consistent environments for a vibrant animated production.",
       image: "/images/projects/flamingo-flamenco.jpg",
+      link: "https://www.youtube.com/watch?v=qX9TcciNvwE",
     },
   ]
 
@@ -116,21 +124,25 @@ export default function JorgePortfolioMockup() {
       title: "Flamingo Flamenco",
       contribution: "Set Dressing",
       image: "/images/hero/flamingo-flamenco.jpg",
+      link: "https://www.youtube.com/watch?v=qX9TcciNvwE",
     },
     {
       title: "Giants of La Mancha",
       contribution: "Quality Check • Layout",
       image: "/images/hero/giants-of-la-mancha.jpg",
+      link: "https://www.youtube.com/watch?v=r6y8Ac9A7mU",
     },
     {
       title: "SuperKlaus",
       contribution: "Quality Check • Set Dressing",
       image: "/images/hero/superklaus.jpg",
+      link: "https://www.youtube.com/watch?v=zae8uv7nm8c",
     },
     {
       title: "200% Wolf",
       contribution: "Rigging Assistance",
       image: "/images/hero/200-wolf.jpg",
+      link: "https://www.youtube.com/watch?v=s0gdFPg3cwI",
     },
   ]
 
@@ -145,6 +157,35 @@ export default function JorgePortfolioMockup() {
   const { scrollY } = useScroll()
 
   const heroY = useTransform(scrollY, [0, 500], [0, -40])
+
+  const [activeVideo, setActiveVideo] = useState(null)
+
+  const getYouTubeEmbedUrl = (url) => {
+    try {
+      const parsed = new URL(url)
+      const videoId = parsed.searchParams.get("v")
+      if (!videoId) return null
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`
+    } catch {
+      return null
+    }
+  }
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setActiveVideo(null)
+      }
+    }
+
+    if (activeVideo) {
+      window.addEventListener("keydown", handleEscape)
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape)
+    }
+  }, [activeVideo])
 
   return (
     <main className="min-h-screen bg-[#070707] text-white">
@@ -279,8 +320,16 @@ export default function JorgePortfolioMockup() {
               </motion.div>
 
               {heroCards.map((project) => (
-                <motion.div
+                <motion.a
                   key={project.title}
+                  href={project.link}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setActiveVideo({
+                      title: project.title,
+                      url: getYouTubeEmbedUrl(project.link),
+                    })
+                  }}
                   className="group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#101010] shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -302,6 +351,12 @@ export default function JorgePortfolioMockup() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                   <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-yellow-300/10 opacity-0 transition duration-500 group-hover:opacity-100" />
 
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-95 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100 group-hover:scale-100">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full border border-yellow-300/25 bg-black/35 shadow-[0_0_0_rgba(250,204,21,0),0_14px_40px_rgba(0,0,0,0.28)] backdrop-blur-[2px] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:border-yellow-300/45 group-hover:bg-black/45 group-hover:shadow-[0_0_30px_rgba(250,204,21,0.16),0_14px_40px_rgba(0,0,0,0.34)]">
+                      <div className="ml-1 h-0 w-0 border-y-[12px] border-y-transparent border-l-[18px] border-l-white" />
+                    </div>
+                  </div>
+
                   <div className="absolute inset-x-0 bottom-0 p-4">
                     <p className="text-[11px] uppercase tracking-[0.28em] text-white/65">
                       {project.contribution}
@@ -310,7 +365,7 @@ export default function JorgePortfolioMockup() {
                       {project.title}
                     </p>
                   </div>
-                </motion.div>
+                </motion.a>
               ))}
             </div>
           </div>
@@ -416,9 +471,17 @@ export default function JorgePortfolioMockup() {
                   : "xl:col-span-6"
 
               return (
-                <motion.article
+                <motion.a
                   key={project.title}
-                  className={`group relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#101010] shadow-[0_20px_80px_rgba(0,0,0,0.45)] ${spanClass}`}
+                  href={project.link}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setActiveVideo({
+                      title: project.title,
+                      url: getYouTubeEmbedUrl(project.link),
+                    })
+                  }}
+                  className={`group relative block overflow-hidden rounded-[2rem] border border-white/10 bg-[#101010] shadow-[0_20px_80px_rgba(0,0,0,0.45)] ${spanClass}`}
                   initial={{ opacity: 0, y: 60 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -10, scale: 1.015 }}
@@ -447,6 +510,12 @@ export default function JorgePortfolioMockup() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent opacity-90" />
                     <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-yellow-300/10 opacity-0 transition duration-500 group-hover:opacity-100" />
 
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-95 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100 group-hover:scale-100">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-full border border-yellow-300/25 bg-black/35 shadow-[0_0_0_rgba(250,204,21,0),0_14px_40px_rgba(0,0,0,0.28)] backdrop-blur-[2px] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:border-yellow-300/45 group-hover:bg-black/45 group-hover:shadow-[0_0_30px_rgba(250,204,21,0.16),0_14px_40px_rgba(0,0,0,0.34)]">
+                        <div className="ml-1 h-0 w-0 border-y-[12px] border-y-transparent border-l-[18px] border-l-white" />
+                      </div>
+                    </div>
+
                     <div className="absolute left-5 top-5 rounded-full border border-white/15 bg-black/50 px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-white/85 backdrop-blur-md">
                       {project.contribution}
                     </div>
@@ -463,7 +532,7 @@ export default function JorgePortfolioMockup() {
                       {project.summary}
                     </p>
                   </div>
-                </motion.article>
+                </motion.a>
               )
             })}
           </div>
@@ -643,6 +712,57 @@ export default function JorgePortfolioMockup() {
           </div>
         </div>
       </section>
+      {activeVideo && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
+          onClick={() => setActiveVideo(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="relative w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#090909] shadow-[0_30px_120px_rgba(0,0,0,0.55)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 md:px-6">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.28em] text-yellow-300">
+                  Trailer
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-white md:text-xl">
+                  {activeVideo.title}
+                </h3>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveVideo(null)}
+                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 transition hover:bg-white/10 hover:text-white"
+                aria-label="Close trailer modal"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="aspect-video w-full bg-black">
+              <iframe
+                key={activeVideo.url}
+                src={activeVideo.url}
+                title={activeVideo.title}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+
+            <div className="flex items-center justify-between border-t border-white/10 px-5 py-3 text-xs text-white/45 md:px-6">
+              <span>Press Esc to close</span>
+              <span>Click outside to dismiss</span>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </main>
   )
 }
