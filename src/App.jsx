@@ -160,6 +160,24 @@ export default function JorgePortfolioMockup() {
 
   const [activeVideo, setActiveVideo] = useState(null)
 
+  const [hoveredProject, setHoveredProject] = useState(null)
+
+  const getYouTubeVideoId = (url) => {
+    try {
+      const parsed = new URL(url)
+      return parsed.searchParams.get("v")
+    } catch {
+      return null
+    }
+  }
+
+  const getYouTubeHoverEmbedUrl = (url) => {
+    const videoId = getYouTubeVideoId(url)
+    if (!videoId) return null
+
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&rel=0`
+  }
+
   const getYouTubeEmbedUrl = (url) => {
     try {
       const parsed = new URL(url)
@@ -246,7 +264,7 @@ export default function JorgePortfolioMockup() {
                   href="#projects"
                   className="rounded-full bg-yellow-300 px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
                 >
-                  Selected Productions
+                  View Selected Work
                 </a>
                 <a
                   href="https://jorge_caceres.artstation.com/"
@@ -481,6 +499,8 @@ export default function JorgePortfolioMockup() {
                       url: getYouTubeEmbedUrl(project.link),
                     })
                   }}
+                  onMouseEnter={() => setHoveredProject(project.title)}
+                  onMouseLeave={() => setHoveredProject(null)}
                   className={`group relative block overflow-hidden rounded-[2rem] border border-white/10 bg-[#101010] shadow-[0_20px_80px_rgba(0,0,0,0.45)] ${spanClass}`}
                   initial={{ opacity: 0, y: 60 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -497,27 +517,40 @@ export default function JorgePortfolioMockup() {
                   </div>
 
                   <div className="relative h-80 overflow-hidden">
-                    <motion.img
-                      src={project.image}
-                      alt={project.title}
-                      className="h-full w-full object-cover"
-                      initial={{ scale: 1.08 }}
-                      whileInView={{ scale: 1 }}
-                      whileHover={{ scale: 1.06 }}
-                      transition={{ duration: 1.2, ease: "easeOut" }}
-                    />
+                    {hoveredProject === project.title ? (
+                      <iframe
+                        src={getYouTubeHoverEmbedUrl(project.link)}
+                        title={`${project.title} trailer preview`}
+                        className="h-full w-full scale-[1.02]"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                      />
+                    ) : (
+                      <motion.img
+                        src={project.image}
+                        alt={project.title}
+                        className="h-full w-full object-cover"
+                        initial={{ scale: 1.08 }}
+                        whileInView={{ scale: 1 }}
+                        whileHover={{ scale: 1.06 }}
+                        transition={{ duration: 1.2, ease: "easeOut" }}
+                      />
+                    )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent opacity-90" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-yellow-300/10 opacity-0 transition duration-500 group-hover:opacity-100" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent opacity-90" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-yellow-300/10 opacity-0 transition duration-500 group-hover:opacity-100" />
 
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-95 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100 group-hover:scale-100">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-full border border-yellow-300/25 bg-black/35 shadow-[0_0_0_rgba(250,204,21,0),0_14px_40px_rgba(0,0,0,0.28)] backdrop-blur-[2px] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:border-yellow-300/45 group-hover:bg-black/45 group-hover:shadow-[0_0_30px_rgba(250,204,21,0.16),0_14px_40px_rgba(0,0,0,0.34)]">
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 scale-95 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100 group-hover:scale-100">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-full border border-yellow-300/25 bg-black/30 shadow-[0_0_0_rgba(250,204,21,0),0_14px_40px_rgba(0,0,0,0.24)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:border-yellow-300/45 group-hover:bg-black/40 group-hover:shadow-[0_0_30px_rgba(250,204,21,0.16),0_14px_40px_rgba(0,0,0,0.30)]">
                         <div className="ml-1 h-0 w-0 border-y-[12px] border-y-transparent border-l-[18px] border-l-white" />
                       </div>
                     </div>
 
                     <div className="absolute left-5 top-5 rounded-full border border-white/15 bg-black/50 px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-white/85 backdrop-blur-md">
                       {project.contribution}
+                    </div>
+
+                    <div className="pointer-events-none absolute bottom-5 right-5 rounded-full border border-white/10 bg-black/45 px-3 py-1 text-[10px] uppercase tracking-[0.24em] text-white/70 opacity-0 transition duration-300 group-hover:opacity-100">
+                      Preview trailer
                     </div>
                   </div>
 
