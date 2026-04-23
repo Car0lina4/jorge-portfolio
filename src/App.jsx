@@ -147,11 +147,36 @@ export default function JorgePortfolioMockup() {
   ]
 
   const education = [
-    "Online Master in 3D with Autodesk Maya and VFX with Houdini — Trazos",
-    "Online Master in 3D Character Modeling for Film and Video Games — Animum",
-    "Fundamentals of 3D Production with Autodesk Maya — Animum",
-    "3D Digital Character Animation — SPEGC",
-    "Audiovisual Assembly and Postproduction — Cesur",
+    {
+      title: "Audiovisual Production Direction",
+      school: "RTVE Instituto",
+      detail: "150h · 6 ECTS · Production workflows, planning and pipeline coordination",
+    },
+    {
+      title: "Online Master in 3D with Autodesk Maya and VFX with Houdini",
+      school: "Trazos",
+      detail: "Advanced modeling, VFX and production workflows",
+    },
+    {
+      title: "Online Master in 3D Character Modeling for Film and Video Games",
+      school: "Animum",
+      detail: "Character creation for production environments",
+    },
+    {
+      title: "Fundamentals of 3D Production with Autodesk Maya",
+      school: "Animum",
+      detail: "Core 3D pipeline and asset creation",
+    },
+    {
+      title: "3D Digital Character Animation",
+      school: "SPEGC",
+      detail: "Animation principles and character performance",
+    },
+    {
+      title: "Audiovisual Assembly and Postproduction",
+      school: "Cesur",
+      detail: "Editing and postproduction fundamentals",
+    },
   ]
 
   const { scrollY } = useScroll()
@@ -692,12 +717,25 @@ export default function JorgePortfolioMockup() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {education.map((item) => (
+            {education.map((item, index) => (
               <div
-                key={item}
-                className="rounded-[1.5rem] border border-white/10 bg-[#101010] p-6 text-white/75"
+                key={index}
+                className="group relative rounded-[1.5rem] border border-white/10 bg-[#101010] px-6 py-5 text-sm text-white/80 transition-all duration-300 hover:border-yellow-300/40"
               >
-                {item}
+                {/* TEXTO PRINCIPAL */}
+                <p className="font-medium text-white">
+                  {item.title} — {item.school}
+                </p>
+
+                {/* HOVER DETAIL */}
+                <div className="pointer-events-none absolute inset-0 flex items-end p-6 opacity-0 transition duration-300 group-hover:opacity-100">
+                  <div className="rounded-xl bg-black/80 px-4 py-3 text-xs text-white/80 backdrop-blur-md">
+                    {item.detail}
+                  </div>
+                </div>
+
+                {/* GLOW SUAVE */}
+                <div className="pointer-events-none absolute inset-0 rounded-[1.5rem] opacity-0 transition duration-300 group-hover:opacity-100 shadow-[0_0_40px_rgba(250,204,21,0.08)]" />
               </div>
             ))}
           </div>
