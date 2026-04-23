@@ -728,8 +728,8 @@ export default function JorgePortfolioMockup() {
                 </p>
 
                 {/* HOVER DETAIL */}
-                <div className="pointer-events-none absolute inset-0 flex items-end p-6 opacity-0 transition duration-300 group-hover:opacity-100">
-                  <div className="rounded-xl bg-black/80 px-4 py-3 text-xs text-white/80 backdrop-blur-md">
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-6 opacity-0 transition-all duration-300 group-hover:opacity-100">
+                  <div className="max-w-[80%] translate-y-2 rounded-xl border border-white/10 bg-black/75 px-4 py-3 text-center text-xs leading-5 text-white/80 backdrop-blur-md transition-all duration-300 group-hover:translate-y-0">
                     {item.detail}
                   </div>
                 </div>
