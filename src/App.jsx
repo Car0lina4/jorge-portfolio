@@ -6,10 +6,10 @@ export default function JorgePortfolioMockup() {
     {
       role: "3D Modeler & App Quality Check",
       company: "XRF",
-      period: "Mar 2024 — Present",
+      period: "Mar 2024 — Apr 2026",
       location: "Madrid, Spain",
       description:
-        "Creates and optimizes 3D models for virtual and augmented reality applications while also reviewing VR, PC and mobile apps to detect issues, report bugs and help improve the final user experience.",
+        "Created and optimized 3D models for virtual and augmented reality applications while reviewing VR, PC and mobile apps to detect issues, report bugs and improve the final user experience.",
     },
     {
       role: "3D Modeler",
