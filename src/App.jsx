@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
+import { Analytics } from "@vercel/analytics/react"
 
 export default function JorgePortfolioMockup() {
   const experience = [
@@ -834,6 +835,7 @@ export default function JorgePortfolioMockup() {
           </motion.div>
         </div>
       )}
+      <Analytics />
     </main>
   )
 }
